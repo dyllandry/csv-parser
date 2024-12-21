@@ -40,10 +40,18 @@ async function main() {
       testModule.tests.length > 0,
       "Test module exports no tests, this is probably a bug."
     );
-    const tests = testModule.tests.map((test) => ({
-      ...test,
-      filePath: nodeModulePath,
-    }));
+    const tests = testModule.tests.map((test) => {
+      assert(test.name, `Test in file ${nodeModulePath} is missing a name.`);
+      assert(
+        test.script,
+        `Test in file ${nodeModulePath} is missing a script.`
+      );
+      const testWithPath = {
+        ...test,
+        filePath: nodeModulePath,
+      };
+      return testWithPath;
+    });
     allTests.push(...tests);
   }
 
