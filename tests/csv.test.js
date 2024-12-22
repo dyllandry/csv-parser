@@ -8,13 +8,7 @@ export const tests = [
   {
     name: "throws an error if there is no file",
     script: async () => {
-      let capturedError;
-      try {
-        await parse("non-existant-file.csv");
-      } catch (error) {
-        capturedError = error;
-      }
-      assert(capturedError instanceof FileNotFoundError);
+      await assert.rejects(parse("non-existant-file.csv"), FileNotFoundError);
     },
   },
   {
@@ -22,6 +16,34 @@ export const tests = [
     script: async () => {
       const csvPath = path.resolve(import.meta.dirname, "empty.csv");
       await parse(csvPath);
+    },
+  },
+  {
+    name: "reads three records from csv",
+    script: async () => {
+      const csvPath = path.resolve(import.meta.dirname, "three-records.csv");
+      const records = await parse(csvPath);
+      const expected = [
+        ["10", "20"],
+        ["30", "40"],
+        ["50", "60"],
+      ];
+      assert.deepEqual(records, expected);
+    },
+  },
+  {
+    name: "reads double quote enclosed fields from csv",
+    script: async () => {
+      const csvPath = path.resolve(
+        import.meta.dirname,
+        "double-quote-enclosed-fields.csv"
+      );
+      const records = await parse(csvPath);
+      const expected = [
+        ["10", "20"],
+        ["30", "40"],
+      ];
+      assert.deepEqual(records, expected);
     },
   },
 ];
