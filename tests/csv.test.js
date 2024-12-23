@@ -46,4 +46,19 @@ export const tests = [
       assert.deepEqual(records, expected);
     },
   },
+  {
+    name: "reads escaped double quotes from csv",
+    script: async () => {
+      const csvPath = path.resolve(
+        import.meta.dirname,
+        "escaped-double-quotes.csv"
+      );
+      const records = await parse(csvPath);
+      const expected = [
+        ['"', '""'],
+        ['"""', '""""'],
+      ];
+      assert.deepEqual(records, expected);
+    },
+  },
 ];

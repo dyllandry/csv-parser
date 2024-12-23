@@ -55,8 +55,22 @@ async function main() {
     allTests.push(...tests);
   }
 
+  let testsToRun = [];
+  const foundOnlyOption = allTests.some((test) => test.only);
+  if (foundOnlyOption) {
+    testsToRun = allTests.filter((test) => test.only);
+  } else {
+    testsToRun = allTests;
+  }
+
+  if (foundOnlyOption) {
+    console.log(
+      `Only running ${testsToRun.length}/${allTests.length} tests...\n`
+    );
+  }
+
   const testResults = [];
-  for (const test of allTests) {
+  for (const test of testsToRun) {
     let pass;
     let scriptError = null;
     try {
